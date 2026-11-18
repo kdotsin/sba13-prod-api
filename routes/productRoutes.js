@@ -39,4 +39,16 @@ route.put('/products/:id', async (req, res) => {
   }
 })
 
+route.delete('/products/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const deletedProd = await Product.findByIdAndDelete(id);
+    console.log('successsfully deleted product');
+    res.status(200).json(deletedProd);
+  } catch (err) {
+    console.error('failed to delete singular product', err);
+    res.status(400).json({ error: 'cannot delete product', details: err.message });
+  }
+})
+
 export default route;
