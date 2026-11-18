@@ -26,4 +26,17 @@ route.get('/products/:id', async (req, res) => {
   }
 })
 
+route.put('/products/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const body = req.body;
+    const updatedProd = await Product.findByIdAndUpdate(id, body, { returnDocument: 'after' })
+    console.log('successsfully updated product');
+    res.status(200).json(updatedProd);
+  } catch (err) {
+    console.error('failed to update singular product', err);
+    res.status(400).json({ error: 'cannot update product', details: err.message });
+  }
+})
+
 export default route;
