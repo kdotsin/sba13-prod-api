@@ -51,4 +51,29 @@ route.delete('/products/:id', async (req, res) => {
   }
 })
 
+route.get('/products', async (req, res) => {
+  try {
+    const category = req.query.category || "";
+    const minPrice = req.query.minPrice || 1;
+    const maxPrice = req.query.maxPrice || 100;
+    const sortBy = req.query.sortBy == 'price_desc' ? -1 : 1;
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 10;
+
+    const filteredProd = await Product.find({
+      category: category,
+      price: { $gt: minPrice, $lt: maxPrice },
+    })
+      .sort({ price: sortBy })
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    console.log('successsfully found products');
+    res.status(200).json(filteredProd);
+  } catch (err) {
+    console.error('failed to fetch products', err);
+    res.status(400).json({ error: 'cannot retrieve product', details: err.message });
+  }
+})
+
 export default route;
