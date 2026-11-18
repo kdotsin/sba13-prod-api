@@ -14,4 +14,16 @@ route.post('/products', async (req, res) => {
   }
 })
 
+route.get('/products/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const readProduct = await Product.findById(id);
+    console.log('successsfully found product');
+    res.status(200).json(readProduct);
+  } catch (err) {
+    console.error('failed to retrieve singular product', err);
+    res.status(400).json({ error: 'cannot retrieve product', details: err.message });
+  }
+})
+
 export default route;
